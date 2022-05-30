@@ -1,0 +1,27 @@
+###
+GET http://localhost:4000/api/mascotas
+
+###
+POST http://localhost:4000/api/mascotas
+Content-Type: application/json
+
+{
+    "tipoAnimal": "628b0310ec9a38fa7deb57fb",
+    "raza": "628bc608577e84b8394f7a6f"
+}
+
+###
+GET http://localhost:4000/api/mascotas/6
+
+###
+DELETE http://localhost:4000/api/mascotas/6281bd873c3463bf93494425
+
+###
+PUT http://localhost:4000/api/mascotas/6281bd873c3463bf93494425
+Content-Type: application/json
+
+{
+    "nombre": "Ricky",
+    "tipoMascota": "",
+    "raza": "",
+}
