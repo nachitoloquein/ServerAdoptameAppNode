@@ -1,7 +1,7 @@
 const usuarioCtrl = {}
 
 const Usuario = require('../models/usuario.model');
-const capitalizar = require('../helpers/funciones.helpers');
+const funciones = require('../helpers/funciones.helpers');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -9,42 +9,42 @@ usuarioCtrl.register = async(req,res) =>{
     try{
         const { nombre, apellido, email, pass, phoneNumber, region } = req.body;
 
-        // Validamos nuestro usuario
+        // Validamos los campos
         if (!(email && pass && nombre && apellido)) {
-          res.status(400).send("Debe rellenar todos los campos");
+          return res.status(400).send("Debe rellenar todos los campos");
         }
     
-        // check if user already exist
-        // Validate if user exist in our database
+        // Verificamos si ya existe el correo
         const usuarioExistente = await Usuario.findOne({ email });
     
         if (usuarioExistente) {
           return res.status(409).send("Correo electrónico existente");
         }
     
-        //Encrypt user password
+        //Encriptamos nuestra contraseña
         encryptedPassword = await bcrypt.hash(pass, 10);
         
-        // Create user in our database
+        // Lo creamos
         const user = await Usuario.create({
-          nombre: capitalizar.capitalizar(nombre),
-          apellido: capitalizar.capitalizar(apellido),
-          email: email.toLowerCase(), // sanitize: convert email to lowercase
+          nombre: funciones.capitalizar(nombre), //acá simplemente vamos a capitalizar estos dos valores
+          apellido: funciones.capitalizar(apellido),
+          email: email.toLowerCase(), // sanitizamos las letras del correo 
           pass: encryptedPassword,
         });
+        await user.save(); //lo guardamos
     
-        // Create token
+        // Creamos el token, por defecto le pasamos un test si no encuentra el de la variable de entorno
         const token = jwt.sign(
           { user_id: user._id, email },
-          process.env.TOKEN_KEY,
+          process.env.TOKEN_KEY || 'test',
           {
             expiresIn: "2h",
           }
         );
-        // save user token
+        // lo guardamos
         user.token = token;
     
-        // return new user
+        // retornamos estado correcto 200
         res.status(201).json(user);
 
     }
@@ -60,16 +60,19 @@ usuarioCtrl.login = async(req,res) =>{
 
     // Validamos que obtenga todos los campos
     if (!(email || pass)) {
-      res.status(400).send("Debe llenar todos los campos");
+      return res.status(400).send("Debe llenar todos los campos");
     }
     // Validamos si el usuario existe dentro de la bdd
     const user = await Usuario.findOne({ email });
 
+    if(!user) return res.status(401).send('Error, correo electrónico no existente');
+    //if(user.pass !== pass) return res.status(401).send('Contraseña equivocada');
+
     if (user && (await bcrypt.compare(pass, user.pass))) {
       // Creamos el token de sesión
       const token = jwt.sign(
-        { user_id: user._id, email },
-        process.env.TOKEN_KEY,
+        { _id: user._id},
+        process.env.TOKEN_KEY || 'test',
         {
           expiresIn: "2h",
         }
@@ -78,10 +81,12 @@ usuarioCtrl.login = async(req,res) =>{
       // salvamos el token del usuario
       user.token = token;
 
-      // usuario
-      res.status(200).json(user);
+      // enviamos el mensaje correcto
+      return res.status(200).send('Logeado');
     }
-    res.status(400).send("Credenciales inválidas");
+    else{
+    return res.status(400).send("Contraseña incorrecta");
+    }
   } catch (err) {
     console.log(err);
   }

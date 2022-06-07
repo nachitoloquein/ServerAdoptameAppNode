@@ -8,3 +8,12 @@ Content-Type: application/json
     "email": "nacho@gmail.com",
     "pass": "123456"
 }
+
+###
+POST http://localhost:4000/api/usuario/login
+Content-Type: application/json
+
+{
+    "email": "nacho@gmail.com",
+    "pass": "123456"
+}
