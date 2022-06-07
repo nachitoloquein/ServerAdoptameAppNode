@@ -1,29 +1,25 @@
 const usuarioCtrl = {}
 
-const Usuario = require('../models/usuario.model')
-const Funcion = require('../helpers/funciones.helpers')
+const Usuario = require('../models/usuario.model');
+const capitalizar = require('../helpers/funciones.helpers');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 usuarioCtrl.register = async(req,res) =>{
     try{
-        const { nombre, apellido, email, pass, phoneNumber, nombreUsuario, region } = req.body;
+        const { nombre, apellido, email, pass, phoneNumber, region } = req.body;
 
         // Validamos nuestro usuario
-        if (!(email && pass && nombre && apellido && nombreUsuario)) {
+        if (!(email && pass && nombre && apellido)) {
           res.status(400).send("Debe rellenar todos los campos");
         }
     
         // check if user already exist
         // Validate if user exist in our database
-        const usuarioExistente = await User.findOne({ email });
+        const usuarioExistente = await Usuario.findOne({ email });
     
         if (usuarioExistente) {
           return res.status(409).send("Correo electrónico existente");
-        }
-
-        const usernameExistente = await User.findOne({ nombreUsuario });
-    
-        if (usernameExistente) {
-          return res.status(409).send("Nombre de usuario existente");
         }
     
         //Encrypt user password
@@ -31,9 +27,8 @@ usuarioCtrl.register = async(req,res) =>{
         
         // Create user in our database
         const user = await Usuario.create({
-          nombre: Funcion.capitalizar(nombre),
-          apellido: Funcion.capitalizar(apellido),
-          nombreUsuario,
+          nombre: capitalizar.capitalizar(nombre),
+          apellido: capitalizar.capitalizar(apellido),
           email: email.toLowerCase(), // sanitize: convert email to lowercase
           pass: encryptedPassword,
         });

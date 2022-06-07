@@ -6,7 +6,6 @@ const usuarioSchema = new Schema ({
     email: {type: String, required: true, unique:true},
     pass: {type: String, required:true},
     phoneNumber: {type: Number, required: false, maxlength:8},
-    nombreUsuario: {type: String, required: true, unique: true, minlength: 5},
     region: {type: String, required: false},
     token: {type: String}
 },{
