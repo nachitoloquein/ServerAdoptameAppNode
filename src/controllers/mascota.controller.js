@@ -9,7 +9,8 @@ mascotasCtrl.getMascotas = async (req,res)=> {
 
 mascotasCtrl.createMascotas = async (req, res)=> {
     try{
-    const newMascota = new Mascota(req.body);
+    const {nombre, tipoAnimal, raza} = req.body;
+    const newMascota = new Mascota({nombre, tipoAnimal, raza, creador});
     await newMascota.save();
 
     res.send({message: 'Mascota creada'})

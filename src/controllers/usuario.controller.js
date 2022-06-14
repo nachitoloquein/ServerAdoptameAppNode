@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 usuarioCtrl.register = async(req,res) =>{
     try{
-        const { nombre, apellido, email, pass, phoneNumber, region } = req.body;
+        const { nombre, apellido, email, pass} = req.body;
 
         // Validamos los campos
         if (!(email && pass && nombre && apellido)) {
