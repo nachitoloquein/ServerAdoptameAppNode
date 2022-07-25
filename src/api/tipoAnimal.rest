@@ -1,9 +1,0 @@
-GET  http://localhost:4000/api/tipoAnimal
-
-###
-POST http://localhost:4000/api/tipoAnimal
-Content-Type: application/json
-
-{
-    "descripcion": "Pollito"
-}

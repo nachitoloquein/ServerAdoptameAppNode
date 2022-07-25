@@ -3,14 +3,14 @@ const mascotasCtrl = {}
 const Mascota = require('../models/mascota.model');
 
 mascotasCtrl.getMascotas = async (req,res)=> {
-    const mascotas = await Mascota.find().populate('tipoAnimal', 'descripcion').populate('raza','descripcion');
+    const mascotas = await Mascota.find();
     res.json(mascotas);
 };
 
 mascotasCtrl.createMascotas = async (req, res)=> {
     try{
-    const {nombre, tipoAnimal, raza} = req.body;
-    const newMascota = new Mascota({nombre, tipoAnimal, raza, creador});
+    const {nombre, raza} = req.body;
+    const newMascota = new Mascota({nombre, raza});
     await newMascota.save();
 
     res.send({message: 'Mascota creada'})
