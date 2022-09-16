@@ -3,7 +3,9 @@ const { Schema , model } = require('mongoose');
 //Genero el modelo
 const mascotaSchema = new Schema({
     nombre: {type: String, required: true},
-    raza: {type: String, required: false},
+    raza: {type: String, required: true},
+    foto: {type: String, required:false},
+    sexo: {type: String, required: true }
     //creador: {type: Schema.Types.ObjectId, ref: 'Usuario'}
 },{
     versionKey: false
