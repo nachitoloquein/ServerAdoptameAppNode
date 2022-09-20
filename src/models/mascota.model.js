@@ -4,7 +4,7 @@ const { Schema , model } = require('mongoose');
 const mascotaSchema = new Schema({
     nombre: {type: String, required: true},
     raza: {type: String, required: true},
-    foto: {type: String, required:false},
+    fotoURL: {type: String, required:false},
     sexo: {type: String, required: true }
     //creador: {type: Schema.Types.ObjectId, ref: 'Usuario'}
 },{
